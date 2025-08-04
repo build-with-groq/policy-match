@@ -1,0 +1,14 @@
+{
+    "system_is_up_and_running": "النظام يعمل بشكل جيد",
+    "documents_fetched_successfully": "تم استعادة المستندات بنجاح",
+    "request_is_invalid": "الطلب غير صالح",
+    "an_error_occurred_while_processing_your_request": "حدث خطأ أثناء معالجة الطلب",
+    "file_uploaded_successfully": "تم رفع الملف بنجاح",
+    "document_deleted_successfully": "تم حذف المستند بنجاح",
+    "policy_deleted_successfully": "تم حذف السياسة بنجاح",
+    "rule_deleted_successfully": "تم حذف القاعدة بنجاح",
+    "policy_id_is_required": "معرف السياسة مطلوب",
+    "rule_id_is_required": "معرف القاعدة مطلوب",
+    "no_fields_to_update": "لا يوجد حقول لتحديث",
+    "rule_updated_successfully": "تم تحديث القاعدة بنجاح"
+}

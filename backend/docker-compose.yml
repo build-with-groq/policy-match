@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  tika:
+    image: apache/tika:latest
+    ports:
+      - 9998:9998
+    volumes:
+      - tika_data:/var/lib/tika
+
+volumes:
+  postgres_data:
+  tika_data:

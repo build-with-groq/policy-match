@@ -1,0 +1,14 @@
+{
+    "system_is_up_and_running": "System is Up and Running!",
+    "documents_fetched_successfully": "Documents fetched successfully",
+    "request_is_invalid": "Request is invalid",
+    "an_error_occurred_while_processing_your_request": "An error occurred while processing your request",
+    "file_uploaded_successfully": "File uploaded successfully",
+    "document_deleted_successfully": "Document deleted successfully",
+    "policy_deleted_successfully": "Policy deleted successfully",
+    "rule_deleted_successfully": "Rule deleted successfully",
+    "policy_id_is_required": "Policy ID is required",
+    "rule_id_is_required": "Rule ID is required",
+    "no_fields_to_update": "No fields to update",
+    "rule_updated_successfully": "Rule updated successfully"
+}
