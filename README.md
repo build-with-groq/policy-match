@@ -149,7 +149,7 @@ This application automates policy reviews by extracting text from documents, par
 
 ## License
 
-Released under the Apache License. See [LICENSE](LICENSE) for details.
+Licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for details.
 
 ---
 
