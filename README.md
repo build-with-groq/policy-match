@@ -73,6 +73,8 @@ This application automates policy reviews by extracting text from documents, par
 * GNU Make
 * **Groq API Key** ([get yours](https://console.groq.com/keys))
 
+> **Note:** You can install Go, Node.js, npm, or Docker Compose using the Makefile commands, it will prompt you to install what is missing.
+
 ### Setup
 
 1. **Clone the repo**
@@ -81,32 +83,47 @@ This application automates policy reviews by extracting text from documents, par
    git clone https://github.com/build-with-groq/policy-match
    cd policy-match
    ```
-2. **Copy env files**
+2. **Install required tools**
 
-   ```bash
-   cp backend/.env.example backend/.env
-   cp frontend/.env.local.example frontend/.env.local
-   ```
-3. **Fill in variables**
+```bash
+make bootstrap
+```
 
-   * `backend/.env`:
+This will:
 
-     ```env
-     GROQ_API_KEY=your_groq_api_key
-     LLM_MODEL=meta-llama/llama-4-maverick-17b-128e-instruct
-     TIKA_URL=http://localhost:9998
-     ...
-     ```
-   * `frontend/.env.local`:
+* Check for **Go**, **Node.js**, **npm**, **Docker**, and **Docker Compose**
+* Prompt to install any missing tools interactively
 
-     ```env
-     NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
-     ```
-4. **Install & build everything**
+3. **Copy environment files**
 
-   ```bash
-   make setup
-   ```
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.local.example frontend/.env.local
+```
+
+4. **Fill in variables**
+
+* `backend/.env`:
+
+```env
+GROQ_API_KEY=your_groq_api_key
+LLM_MODEL=meta-llama/llama-4-maverick-17b-128e-instruct
+TIKA_URL=http://localhost:9998
+```
+
+* `frontend/.env.local`:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+```
+
+5. **Install dependencies & start services**
+
+```bash
+make setup
+```
+
+This installs backend & frontend dependencies, starts Docker Compose services, and waits for Postgres & Tika to be ready.
 
 ### Usage
 
@@ -135,15 +152,14 @@ This application automates policy reviews by extracting text from documents, par
 ## Next Steps
 
 ### For Developers
+- **Create your free GroqCloud account:** Access official API docs, the playground for experimentation, and more resources via [Groq Console](https://console.groq.com)
+- **Build and customize:** Fork this repo and start customizing to build out your own Chrome extension with AI capabilities
+- **Explore Chrome Extension APIs:** Learn more about [Chrome Extension development](https://developer.chrome.com/docs/extensions/) to add advanced features
+- **Get support:** Connect with other developers building on Groq, chat with our team, and submit feature requests on our [Groq Developer Forum](https://community.groq.com)
 
-* **Explore the Groq Console:** Get API docs, playground, and examples at [console.groq.com](https://console.groq.com).
-* **Fork & Extend:** Build new features—alerting, batch scans, or custom reporting.
-* **Join the Community:** Ask questions and share feedback on the [Groq Developer Forum](https://community.groq.com).
-
-### For Business Leaders
-
-* **Enterprise Access:** Learn about SLAs and dedicated support via [Groq Enterprise](https://groq.com/enterprise-access/).
-* **Consultation:** Contact our team to discuss compliance automation at scale.
+### For Founders and Business Leaders
+- **See enterprise capabilities:** This template showcases production-ready AI that can handle realtime business workloads in browser extensions
+- **Discuss your needs:** [Contact our team](https://groq.com/enterprise-access/) to explore how Groq can accelerate your AI initiatives and browser-based applications
 
 ---
 

@@ -12,6 +12,7 @@ import (
 	"policy-match/internal/service"
 	"policy-match/internal/utils"
 
+	"github.com/rs/zerolog/log"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -45,6 +46,7 @@ func NewServer(cfg *config.Config) *Server {
 func (s *Server) Run() error {
 	port := os.Getenv("PORT")
 	if port == "" {
+		log.Info().Msg("PORT is not set, using default port 8080")
 		port = "8080"
 	}
 	return s.router.Run(":" + port)
