@@ -3,9 +3,8 @@ package llm
 type Role string
 
 const (
-	UserRole      Role = "user"
-	AssistantRole Role = "assistant"
-	SystemRole    Role = "system"
+	UserRole   Role = "user"
+	SystemRole Role = "system"
 )
 
 type MessageRequest struct {

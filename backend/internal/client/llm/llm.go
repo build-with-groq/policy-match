@@ -68,8 +68,8 @@ func (l *LLMClient) CheckCompliance(ctx context.Context, policyRules []repositor
 	sysBuf.WriteString("- " + documentContent + "\n")
 
 	msgs := []MessageRequest{
-		{Role: "system", Content: CHAT_SYSTEM_PROMPT},
-		{Role: "user", Content: sysBuf.String()},
+		{Role: SystemRole, Content: CHAT_SYSTEM_PROMPT},
+		{Role: UserRole, Content: sysBuf.String()},
 	}
 
 	reqBody := ChatRequest{
@@ -139,8 +139,8 @@ func (l *LLMClient) ExtractRules(ctx context.Context, policyContent string) ([]R
 	sysBuf.WriteString("- " + policyContent + "\n")
 
 	msgs := []MessageRequest{
-		{Role: "system", Content: EXTRACT_RULES_SYSTEM_PROMPT},
-		{Role: "user", Content: sysBuf.String()},
+		{Role: SystemRole, Content: EXTRACT_RULES_SYSTEM_PROMPT},
+		{Role: UserRole, Content: sysBuf.String()},
 	}
 
 	reqBody := ChatRequest{
@@ -149,7 +149,7 @@ func (l *LLMClient) ExtractRules(ctx context.Context, policyContent string) ([]R
 		MaxCompletionTokens: 8192,
 		TopP:                1.0,
 		Stream:              false,
-		Stop:                []string{"___END___"},
+		Stop:                []string{"ERROR"},
 		Model:               l.cfg.LLMModel,
 		ResponseFormat: ResponseFormat{
 			Type: "json_schema",
