@@ -207,7 +207,7 @@ func (s *Service) DeleteRule(ctx context.Context, id string) error {
 	return s.repository.DeleteRule(ctx, uuid.MustParse(id))
 }
 
-func (s *Service) UpdateRule(ctx context.Context, policyID uuid.UUID, ruleID string, updates map[string]interface{}) error {
+func (s *Service) UpdateRule(ctx context.Context, policyID uuid.UUID, ruleID string, updates map[string]any) error {
 	return s.repository.
 		UpdateRule(
 			ctx,

@@ -67,18 +67,10 @@ func (l *LLMClient) CheckCompliance(ctx context.Context, policyRules []repositor
 	sysBuf.WriteString("Document:\n")
 	sysBuf.WriteString("- " + documentContent + "\n")
 
-	msgs := []ChatMessageBlock{
-		{Role: "system", Content: sysBuf.String()},
+	msgs := []MessageRequest{
+		{Role: "system", Content: CHAT_SYSTEM_PROMPT},
+		{Role: "user", Content: sysBuf.String()},
 	}
-
-	msgs = append(msgs, ChatMessageBlock{
-		Role:    "system",
-		Content: CHAT_SYSTEM_PROMPT,
-	})
-	msgs = append(msgs, ChatMessageBlock{
-		Role:    "user",
-		Content: sysBuf.String(),
-	})
 
 	reqBody := ChatRequest{
 		Messages:            msgs,
@@ -94,23 +86,23 @@ func (l *LLMClient) CheckCompliance(ctx context.Context, policyRules []repositor
 				Name: "response",
 				Schema: ParametersRequest{
 					Type: "object",
-					Properties: map[string]interface{}{
-						"is_compliant": map[string]interface{}{
+					Properties: map[string]any{
+						"is_compliant": map[string]any{
 							"type":        "boolean",
 							"description": "Whether the document is compliant with the policy",
 						},
-						"compliance_percentage": map[string]interface{}{
+						"compliance_percentage": map[string]any{
 							"type":        "number",
 							"description": "The compliance percentage with the policy",
 						},
-						"violations": map[string]interface{}{
+						"violations": map[string]any{
 							"type":        "array",
 							"description": "The violated rules of the policy",
-							"items": map[string]interface{}{
+							"items": map[string]any{
 								"type": "string",
 							},
 						},
-						"is_human_review_required": map[string]interface{}{
+						"is_human_review_required": map[string]any{
 							"type":        "boolean",
 							"description": "Whether the document requires human review",
 						},
@@ -141,12 +133,12 @@ func (l *LLMClient) CheckCompliance(ctx context.Context, policyRules []repositor
 	return &checkComplianceResponse, nil
 }
 
-func (l *LLMClient) ExtractRules(ctx context.Context, policyContent string) ([]Rules, error) {
+func (l *LLMClient) ExtractRules(ctx context.Context, policyContent string) ([]Rule, error) {
 	var sysBuf bytes.Buffer
 	sysBuf.WriteString("Policy:\n")
 	sysBuf.WriteString("- " + policyContent + "\n")
 
-	msgs := []ChatMessageBlock{
+	msgs := []MessageRequest{
 		{Role: "system", Content: EXTRACT_RULES_SYSTEM_PROMPT},
 		{Role: "user", Content: sysBuf.String()},
 	}
@@ -165,15 +157,15 @@ func (l *LLMClient) ExtractRules(ctx context.Context, policyContent string) ([]R
 				Name: "response",
 				Schema: ParametersRequest{
 					Type: "object",
-					Properties: map[string]interface{}{
-						"rules": map[string]interface{}{
+					Properties: map[string]any{
+						"rules": map[string]any{
 							"type":        "array",
 							"description": "The rules of the policy",
-							"items": map[string]interface{}{
+							"items": map[string]any{
 								"type": "object",
-								"properties": map[string]interface{}{
-									"rule_id":   map[string]interface{}{"type": "string"},
-									"rule_text": map[string]interface{}{"type": "string"},
+								"properties": map[string]any{
+									"rule_id":   map[string]any{"type": "string"},
+									"rule_text": map[string]any{"type": "string"},
 								},
 								"required": []string{"rule_id", "rule_text"},
 							},

@@ -189,7 +189,7 @@ func (h *Handler) HandleUpdateRule(c *gin.Context) {
 		return
 	}
 
-	updates := map[string]interface{}{}
+	updates := map[string]any{}
 	if req.Title != nil {
 		updates["title"] = *req.Title
 	}
