@@ -29,7 +29,7 @@ const config: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#2DD4BF",
+          DEFAULT: "#F55036",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -55,6 +55,13 @@ const config: Config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        groq: {
+          primary: "#F55036",
+          dark: "#1F1F1F",
+          white: "#FFFFFF",
+          "primary-hover": "#E04429",
+          "primary-light": "#FFF5F3",
         },
       },
       borderRadius: {
