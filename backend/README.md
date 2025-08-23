@@ -120,7 +120,7 @@ Open [http://localhost:8080/api/v1/health](http://localhost:8080/api/v1/health) 
 
 ## License
 
-Released under the Apache License. See [LICENSE](LICENSE) for details.
+Released under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 

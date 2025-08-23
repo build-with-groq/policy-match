@@ -166,7 +166,7 @@ This installs backend & frontend dependencies, starts Docker Compose services, a
 
 ## License
 
-Licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for details.
+Licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
