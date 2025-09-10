@@ -135,7 +135,7 @@ func (r *Repository) DeleteRule(ctx context.Context, id uuid.UUID) error {
 		Error
 }
 
-func (r *Repository) UpdateRule(ctx context.Context, policyID uuid.UUID, ruleID string, updates map[string]interface{}) error {
+func (r *Repository) UpdateRule(ctx context.Context, policyID uuid.UUID, ruleID string, updates map[string]any) error {
 	return r.db.
 		WithContext(ctx).
 		Model(&Rule{}).

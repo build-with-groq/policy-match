@@ -3,21 +3,20 @@ package llm
 type Role string
 
 const (
-	UserRole      Role = "user"
-	AssistantRole Role = "assistant"
-	SystemRole    Role = "system"
+	UserRole   Role = "user"
+	SystemRole Role = "system"
 )
 
-type ChatMessageBlock struct {
+type MessageRequest struct {
 	Role    Role   `json:"role"`
 	Content string `json:"content"`
 }
 
 type ParametersRequest struct {
-	Type                 string                 `json:"type"`
-	Required             []string               `json:"required"`
-	AdditionalProperties bool                   `json:"additionalProperties"`
-	Properties           map[string]interface{} `json:"properties"`
+	Type                 string         `json:"type"`
+	Required             []string       `json:"required"`
+	AdditionalProperties bool           `json:"additionalProperties"`
+	Properties           map[string]any `json:"properties"`
 }
 
 type ToolCallFunctionRequest struct {
@@ -26,7 +25,7 @@ type ToolCallFunctionRequest struct {
 	Parameters  ParametersRequest `json:"parameters"`
 }
 
-type ToolCallRequest struct {
+type ToolRequest struct {
 	Type     string                  `json:"type"`
 	Function ToolCallFunctionRequest `json:"function"`
 }
@@ -42,33 +41,33 @@ type ResponseFormat struct {
 }
 
 type ChatRequest struct {
-	Model               string             `json:"model"`
-	Messages            []ChatMessageBlock `json:"messages"`
-	Temperature         float32            `json:"temperature"`
-	MaxCompletionTokens int                `json:"max_completion_tokens"`
-	TopP                float32            `json:"top_p"`
-	Stream              bool               `json:"stream"`
-	Stop                interface{}        `json:"stop"`
-	Tools               []ToolCallRequest  `json:"tools,omitempty"`
-	ToolChoice          string             `json:"tool_choice,omitempty"`
-	ResponseFormat      ResponseFormat     `json:"response_format"`
+	Model               string           `json:"model"`
+	Messages            []MessageRequest `json:"messages"`
+	Temperature         float32          `json:"temperature"`
+	MaxCompletionTokens int              `json:"max_completion_tokens"`
+	TopP                float32          `json:"top_p"`
+	Stream              bool             `json:"stream"`
+	Stop                []string         `json:"stop"`
+	Tools               []ToolRequest    `json:"tools,omitempty"`
+	ToolChoice          string           `json:"tool_choice,omitempty"`
+	ResponseFormat      ResponseFormat   `json:"response_format"`
 }
 
 type ChatChoice struct {
-	Message ChatMessageBlock `json:"message"`
+	Message MessageRequest `json:"message"`
 }
 
 type ChatResponse struct {
 	Choices []ChatChoice `json:"choices"`
 }
 
-type Rules struct {
+type Rule struct {
 	RuleID   string `json:"rule_id"`
 	RuleText string `json:"rule_text"`
 }
 
 type ExtractRulesResponse struct {
-	Rules []Rules `json:"rules"`
+	Rules []Rule `json:"rules"`
 }
 
 type CheckComplianceResponse struct {

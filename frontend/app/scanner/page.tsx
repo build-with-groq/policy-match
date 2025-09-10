@@ -24,16 +24,16 @@ export default function ScannerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-br from-white via-groq-primary-light to-orange-50">
+      <header className="bg-white/90 backdrop-blur-sm border-b border-groq-primary/10 sticky top-0 z-50">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-4">
               <Link href="/" className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-br from-groq-primary to-groq-primary-hover rounded-lg flex items-center justify-center">
                   <Shield className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-semibold text-slate-900">PolicyMatch</span>
+                <span className="text-xl font-semibold text-groq-dark">PolicyMatch</span>
               </Link>
 
               <div className="hidden md:block ml-8">
@@ -47,7 +47,7 @@ export default function ScannerPage() {
 
             <div className="hidden md:flex items-center gap-3">
               <Link href="/">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="text-groq-dark hover:bg-groq-primary-light">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Home
                 </Button>
@@ -56,11 +56,15 @@ export default function ScannerPage() {
           </div>
 
           {mobileMenuOpen && (
-            <div className="md:hidden border-t border-slate-200 py-4">
+            <div className="md:hidden border-t border-groq-primary/10 py-4">
               <div className="space-y-4">
                 <SystemStatus />
                 <Link href="/" className="block">
-                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-groq-dark hover:bg-groq-primary-light"
+                  >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Back to Home
                   </Button>
@@ -73,24 +77,24 @@ export default function ScannerPage() {
 
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8 bg-white border border-slate-200">
+          <TabsList className="grid w-full grid-cols-3 mb-8 bg-white/80 backdrop-blur-sm border border-groq-primary/10">
             <TabsTrigger
               value="policies"
-              className="flex items-center gap-2 data-[state=active]:bg-green-50 data-[state=active]:text-green-700"
+              className="flex items-center gap-2 data-[state=active]:bg-groq-primary-light data-[state=active]:text-groq-primary"
             >
               <Settings className="w-4 h-4" />
               Policy Management
             </TabsTrigger>
             <TabsTrigger
               value="upload"
-              className="flex items-center gap-2 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700"
+              className="flex items-center gap-2 data-[state=active]:bg-groq-primary-light data-[state=active]:text-groq-primary"
             >
               <Upload className="w-4 h-4" />
               Upload Document
             </TabsTrigger>
             <TabsTrigger
               value="documents"
-              className="flex items-center gap-2 data-[state=active]:bg-purple-50 data-[state=active]:text-purple-700"
+              className="flex items-center gap-2 data-[state=active]:bg-groq-primary-light data-[state=active]:text-groq-primary"
             >
               <Users className="w-4 h-4" />
               Customer Documents
@@ -99,8 +103,8 @@ export default function ScannerPage() {
 
           <TabsContent value="policies" className="space-y-6">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-slate-900 mb-4">Policy Framework Management</h1>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              <h1 className="text-3xl font-bold text-groq-dark mb-4">Policy Framework Management</h1>
+              <p className="text-lg text-groq-dark/70 max-w-2xl mx-auto">
                 Create and manage compliance policy frameworks that will be used to analyze customer documents
               </p>
             </div>
@@ -109,8 +113,8 @@ export default function ScannerPage() {
 
           <TabsContent value="upload" className="space-y-6">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-slate-900 mb-4">Customer Document Analysis</h1>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              <h1 className="text-3xl font-bold text-groq-dark mb-4">Customer Document Analysis</h1>
+              <p className="text-lg text-groq-dark/70 max-w-2xl mx-auto">
                 Upload customer documents to analyze compliance against your policy frameworks
               </p>
             </div>
@@ -119,8 +123,8 @@ export default function ScannerPage() {
 
           <TabsContent value="documents" className="space-y-6">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-slate-900 mb-4">Customer Document Library</h1>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              <h1 className="text-3xl font-bold text-groq-dark mb-4">Customer Document Library</h1>
+              <p className="text-lg text-groq-dark/70 max-w-2xl mx-auto">
                 View and manage analyzed customer documents and their compliance status
               </p>
             </div>

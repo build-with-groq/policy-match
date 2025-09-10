@@ -4,7 +4,7 @@ export
 BINARY=policy-match
 CMD_DIR=./cmd
 
-.PHONY: all build run test clean
+.PHONY: all build run install test clean
 
 all: build
 
@@ -14,6 +14,10 @@ build:
 run: build
 	@echo "Starting server (with .env)..."
 	@./$(BINARY)
+
+install:
+	@echo "→ Backend: fetching Go modules…"
+	@go mod tidy
 
 dev:
 	@echo "Running in dev mode (with .env)..."
