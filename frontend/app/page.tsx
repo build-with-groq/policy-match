@@ -441,23 +441,7 @@ export default function LandingPage() {
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-center border-t border-white/10 pt-8">
-            <div className="text-center md:text-left text-white/60 mb-4 md:mb-0">
-              <p>&copy; 2025 PolicyMatch. All rights reserved.</p>
-            </div>
-
             <div className="flex items-center">
-              <a
-                href="https://groq.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-opacity hover:opacity-80"
-              >
-                <img
-                  src="https://console.groq.com/powered-by-groq.svg"
-                  alt="Powered by Groq for fast inference."
-                  className="h-8"
-                />
-              </a>
             </div>
           </div>
         </div>
