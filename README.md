@@ -99,7 +99,7 @@ This will:
 
 ```bash
 cp backend/.env.example backend/.env
-cp frontend/.env.local.example frontend/.env.local
+cp frontend/.env.example frontend/.env.local
 ```
 
 4. **Fill in variables**
