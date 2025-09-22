@@ -1,4 +1,4 @@
-.PHONY: help all setup init-env check-env build-backend build-frontend build dev test clean \
+.PHONY: help all setup init-env prompt-groq-key check-env build-backend build-frontend build dev test clean \
         bootstrap deps ensure-go ensure-node ensure-npm ensure-docker ensure-compose compose-up compose-down compose-logs wait-services doctor
 
 ENV_FILE     ?= backend/.env
@@ -219,7 +219,34 @@ init-env:
 		cp "$(ENV_EXAMPLE)" "$(ENV_FILE)"; \
 		echo "Created $(ENV_FILE) from template."; \
 	fi
+	@$(MAKE) prompt-groq-key
 	@$(MAKE) check-env
+
+prompt-groq-key:
+	@if grep -q "GROQ_API_KEY=CHANGEME" "$(ENV_FILE)" 2>/dev/null; then \
+		echo ""; \
+		echo "🔑 GROQ API Key Setup"; \
+		echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"; \
+		echo "You need a Groq API key to use this application."; \
+		echo "Get yours free at: https://console.groq.com/keys"; \
+		echo ""; \
+		while true; do \
+			read -p "Please enter your Groq API key: " groq_key; \
+			if [ -n "$$groq_key" ] && [ "$$groq_key" != "CHANGEME" ]; then \
+				if echo "$$groq_key" | grep -qE '^gsk_[a-zA-Z0-9_-]+$$'; then \
+					sed -i.bak "s/GROQ_API_KEY=CHANGEME/GROQ_API_KEY=$$groq_key/" "$(ENV_FILE)" && rm -f "$(ENV_FILE).bak"; \
+					echo "✓ API key saved successfully!"; \
+					break; \
+				else \
+					echo "⚠️  That doesn't look like a valid Groq API key (should start with 'gsk_')"; \
+					echo "   Please try again or press Ctrl+C to exit."; \
+				fi; \
+			else \
+				echo "⚠️  Please enter a valid API key or press Ctrl+C to exit."; \
+			fi; \
+		done; \
+		echo ""; \
+	fi
 
 check-env:
 	@set -e; \
