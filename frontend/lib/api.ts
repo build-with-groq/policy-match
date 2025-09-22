@@ -103,15 +103,13 @@ export class ApiClient {
 
   private static async request<T>(url: string, options: RequestInit = {}): Promise<T> {
     try {
-      // Add API key to headers if available
       const apiKey = this.getApiKey()
       const headers: HeadersInit = {
         "Content-Type": "application/json",
         ...options.headers,
       }
-      
       if (apiKey) {
-        headers["X-API-Key"] = apiKey
+        (headers as Record<string, string>)["X-API-Key"] = apiKey
       }
 
       const response = await fetch(url, {
@@ -119,7 +117,6 @@ export class ApiClient {
         headers,
       })
 
-      // Handle rate limiting
       if (response.status === 429) {
         const errorText = await response.text()
         throw new ApiError(
@@ -166,7 +163,6 @@ export class ApiClient {
         headers,
       })
 
-      // Handle rate limiting
       if (response.status === 429) {
         const errorText = await response.text()
         throw new ApiError(

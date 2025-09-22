@@ -28,7 +28,6 @@ export function ApiKeyManager({ onApiKeyChange, showInHeader = false }: ApiKeyMa
   const [isDemo, setIsDemo] = useState(true)
 
   useEffect(() => {
-    // Load API key from localStorage on mount
     const storedKey = localStorage.getItem("groq_api_key")
     if (storedKey) {
       setApiKey(storedKey)

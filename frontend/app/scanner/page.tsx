@@ -33,7 +33,6 @@ export default function ScannerPage() {
   }
 
   const handleApiKeySubmit = (apiKey: string) => {
-    // Refresh the page to retry with the new API key
     window.location.reload()
   }
 
