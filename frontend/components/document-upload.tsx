@@ -14,12 +14,13 @@ import { cn } from "@/lib/utils"
 
 interface DocumentUploadProps {
   onUploadSuccess: () => void
+  onRateLimitError?: (message: string) => void
   className?: string
 }
 
-export function DocumentUpload({ onUploadSuccess, className }: DocumentUploadProps) {
+export function DocumentUpload({ onUploadSuccess, onRateLimitError, className }: DocumentUploadProps) {
   const { policies } = usePolicies()
-  const { uploadDocument, uploading, error } = useUpload()
+  const { uploadDocument, uploading, error } = useUpload(onRateLimitError)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [selectedPolicyId, setSelectedPolicyId] = useState<string>("")
   const [dragOver, setDragOver] = useState(false)

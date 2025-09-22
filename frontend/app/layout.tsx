@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   title: "PolicyMatch - AI-Powered Policy Compliance Analysis",
   description: "Ensure policy compliance with AI precision. Analyze GDPR, CCPA, HIPAA and more instantly.",
   generator: "v0.dev",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+  },
 }
 
 export default function RootLayout({

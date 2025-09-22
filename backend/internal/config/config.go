@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/rs/zerolog/log"
 )
 
 type Config struct {
@@ -12,6 +13,7 @@ type Config struct {
 	LLMModel   string
 	DBURL      string
 	TikaURL    string
+	Origin     string
 }
 
 func Load() (*Config, error) {
@@ -39,11 +41,18 @@ func Load() (*Config, error) {
 		sslMode,
 	)
 
+	origin := os.Getenv("ORIGIN")
+	if origin == "" {
+		log.Info().Msg("ORIGIN is not set, using default origin http://localhost")
+		origin = "http://localhost"
+	}
+
 	cfg := &Config{
 		GroqAPIKey: os.Getenv("GROQ_API_KEY"),
 		LLMModel:   os.Getenv("LLM_MODEL"),
 		DBURL:      dbURL,
 		TikaURL:    os.Getenv("TIKA_URL"),
+		Origin:     origin,
 	}
 
 	missing := make([]string, 0, 3)

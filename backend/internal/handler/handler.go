@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"context"
 	"policy-match/internal/dto"
 	"policy-match/internal/service"
 	"policy-match/internal/utils"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -29,8 +31,17 @@ func (h *Handler) HandleUploadPolicy(c *gin.Context) {
 		return
 	}
 
-	err := h.service.UploadPolicy(c.Request.Context(), request)
+	ctx := c.Request.Context()
+	if apiKey := c.GetHeader("X-API-Key"); apiKey != "" {
+		ctx = context.WithValue(ctx, dto.UserAPIKeyContext, apiKey)
+	}
+
+	err := h.service.UploadPolicy(ctx, request)
 	if err != nil {
+		if strings.Contains(err.Error(), "RATE_LIMIT") {
+			c.JSON(429, NewResponse(nil, err.Error()))
+			return
+		}
 		log.Error().Msg("error: " + err.Error())
 		c.JSON(500, NewResponse(nil, err.Error()))
 		return
@@ -46,8 +57,17 @@ func (h *Handler) HandleCheckDocumentCompliance(c *gin.Context) {
 		return
 	}
 
-	checkComplianceResponse, err := h.service.CheckDocumentCompliance(c.Request.Context(), request)
+	ctx := c.Request.Context()
+	if apiKey := c.GetHeader("X-API-Key"); apiKey != "" {
+		ctx = context.WithValue(ctx, dto.UserAPIKeyContext, apiKey)
+	}
+
+	checkComplianceResponse, err := h.service.CheckDocumentCompliance(ctx, request)
 	if err != nil {
+		if strings.Contains(err.Error(), "RATE_LIMIT") {
+			c.JSON(429, NewResponse(nil, err.Error()))
+			return
+		}
 		log.Error().Msg("error: " + err.Error())
 		c.JSON(500, NewResponse(nil, err.Error()))
 		return

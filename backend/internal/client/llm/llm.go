@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"policy-match/internal/config"
+	"policy-match/internal/dto"
 	"policy-match/internal/repository"
 
 	"github.com/rs/zerolog/log"
@@ -118,7 +119,12 @@ func (l *LLMClient) CheckCompliance(ctx context.Context, policyRules []repositor
 		return nil, fmt.Errorf("checkCompliance :: error marshalling chat request: %w", err)
 	}
 
-	resp, err := CallGroqAPI(ctx, l.cfg, payload)
+	apiKey := ""
+	if key, ok := ctx.Value(dto.UserAPIKeyContext).(string); ok {
+		apiKey = key
+	}
+
+	resp, err := CallGroqAPIWithKey(ctx, l.cfg, payload, apiKey)
 	if err != nil {
 		return nil, fmt.Errorf("checkCompliance :: error calling groq API: %w", err)
 	}
@@ -182,7 +188,12 @@ func (l *LLMClient) ExtractRules(ctx context.Context, policyContent string) ([]R
 		return nil, fmt.Errorf("extractRules :: error marshalling chat request: %w", err)
 	}
 
-	resp, err := CallGroqAPI(ctx, l.cfg, payload)
+	apiKey := ""
+	if key, ok := ctx.Value(dto.UserAPIKeyContext).(string); ok {
+		apiKey = key
+	}
+
+	resp, err := CallGroqAPIWithKey(ctx, l.cfg, payload, apiKey)
 	if err != nil {
 		return nil, fmt.Errorf("extractRules :: error calling groq API: %w", err)
 	}
@@ -198,36 +209,44 @@ func (l *LLMClient) ExtractRules(ctx context.Context, policyContent string) ([]R
 		return nil, fmt.Errorf("extractRules :: error unmarshalling extract rules response: %w", err)
 	}
 
-	log.Info().Msg("extractRules :: unmarshalled response: " + resp)
-
 	return extractRulesResponse.Rules, nil
 }
 
-func CallGroqAPI(ctx context.Context, cfg *config.Config, payload []byte) (string, error) {
-	req, err := http.NewRequestWithContext(ctx, "POST", "https://api.groq.com/openai/v1/chat/completions", bytes.NewReader(payload))
+func CallGroqAPIWithKey(ctx context.Context, cfg *config.Config, payload []byte, apiKey string) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, "POST", "https://demo-proxy.groqcloud.dev/openai/v1/chat/completions", bytes.NewReader(payload))
 	if err != nil {
-		return "", fmt.Errorf("callGroqAPI :: error creating chat request: %w", err)
+		return "", fmt.Errorf("callGroqAPIWithKey :: error creating chat request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+cfg.GroqAPIKey)
+	req.Header.Set("Origin", cfg.Origin)
+
+	if apiKey != "" {
+		log.Info().Msg("callGroqAPIWithKey :: using API key")
+		req.Header.Set("Authorization", "Bearer "+apiKey)
+	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("callGroqAPI :: error calling chat API: %w", err)
+		return "", fmt.Errorf("callGroqAPIWithKey :: error calling chat API: %w", err)
 	}
 	defer resp.Body.Close()
 
+	body, _ := io.ReadAll(resp.Body)
+
+	if resp.StatusCode == http.StatusTooManyRequests {
+		return "", fmt.Errorf("RATE_LIMIT: %s", string(body))
+	}
+
 	if resp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(resp.Body)
-		return "", fmt.Errorf("callGroqAPI :: chat API error [%d]: %s", resp.StatusCode, string(body))
+		return "", fmt.Errorf("callGroqAPIWithKey :: chat API error [%d]: %s", resp.StatusCode, string(body))
 	}
 
 	var cr ChatResponse
-	if err := json.NewDecoder(resp.Body).Decode(&cr); err != nil {
-		return "", fmt.Errorf("callGroqAPI :: error decoding chat response: %w", err)
+	if err := json.Unmarshal(body, &cr); err != nil {
+		return "", fmt.Errorf("callGroqAPIWithKey :: error decoding chat response: %w", err)
 	}
 	if len(cr.Choices) == 0 {
-		return "", fmt.Errorf("callGroqAPI :: error no choices in chat response")
+		return "", fmt.Errorf("callGroqAPIWithKey :: error no choices in chat response")
 	}
 	return cr.Choices[0].Message.Content, nil
 }

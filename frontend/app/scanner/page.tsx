@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Shield, ArrowLeft, Menu, X, Upload, Users, Settings } from "lucide-react"
 import Link from "next/link"
-import { SystemStatus } from "@/components/system-status"
 import { PolicyManagement } from "@/components/policy-management"
 import { DocumentUpload } from "@/components/document-upload"
 import { DocumentsList } from "@/components/documents-list"
 import { DocumentDetails } from "@/components/document-details"
+import { ApiKeyManager } from "@/components/api-key-manager"
+import { RateLimitDialog } from "@/components/rate-limit-dialog"
 import type { Document } from "@/lib/api"
 
 export default function ScannerPage() {
@@ -17,10 +18,23 @@ export default function ScannerPage() {
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null)
   const [activeTab, setActiveTab] = useState("upload")
   const [refreshKey, setRefreshKey] = useState(0)
+  const [rateLimitError, setRateLimitError] = useState<{ isOpen: boolean; message: string }>({
+    isOpen: false,
+    message: "",
+  })
 
   const handleUploadSuccess = () => {
     setActiveTab("documents")
     setRefreshKey((prev) => prev + 1)
+  }
+
+  const handleRateLimitError = (message: string) => {
+    setRateLimitError({ isOpen: true, message })
+  }
+
+  const handleApiKeySubmit = (apiKey: string) => {
+    // Refresh the page to retry with the new API key
+    window.location.reload()
   }
 
   return (
@@ -35,10 +49,6 @@ export default function ScannerPage() {
                 </div>
                 <span className="text-xl font-semibold text-groq-dark">PolicyMatch</span>
               </Link>
-
-              <div className="hidden md:block ml-8">
-                <SystemStatus />
-              </div>
             </div>
 
             <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -46,6 +56,7 @@ export default function ScannerPage() {
             </Button>
 
             <div className="hidden md:flex items-center gap-3">
+              <ApiKeyManager showInHeader={true} />
               <Link href="/">
                 <Button variant="ghost" size="sm" className="text-groq-dark hover:bg-groq-primary-light">
                   <ArrowLeft className="w-4 h-4 mr-2" />
@@ -58,7 +69,9 @@ export default function ScannerPage() {
           {mobileMenuOpen && (
             <div className="md:hidden border-t border-groq-primary/10 py-4">
               <div className="space-y-4">
-                <SystemStatus />
+                <div className="px-2">
+                  <ApiKeyManager showInHeader={true} />
+                </div>
                 <Link href="/" className="block">
                   <Button
                     variant="ghost"
@@ -108,7 +121,7 @@ export default function ScannerPage() {
                 Create and manage compliance policy frameworks that will be used to analyze customer documents
               </p>
             </div>
-            <PolicyManagement />
+            <PolicyManagement onRateLimitError={handleRateLimitError} />
           </TabsContent>
 
           <TabsContent value="upload" className="space-y-6">
@@ -118,7 +131,7 @@ export default function ScannerPage() {
                 Upload customer documents to analyze compliance against your policy frameworks
               </p>
             </div>
-            <DocumentUpload onUploadSuccess={handleUploadSuccess} />
+            <DocumentUpload onUploadSuccess={handleUploadSuccess} onRateLimitError={handleRateLimitError} />
           </TabsContent>
 
           <TabsContent value="documents" className="space-y-6">
@@ -142,6 +155,13 @@ export default function ScannerPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <RateLimitDialog
+        isOpen={rateLimitError.isOpen}
+        onOpenChange={(open) => setRateLimitError({ ...rateLimitError, isOpen: open })}
+        errorMessage={rateLimitError.message}
+        onApiKeySubmit={handleApiKeySubmit}
+      />
     </div>
   )
 }

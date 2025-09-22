@@ -74,6 +74,7 @@ cp .env.example .env
 # DB_USER=...
 # DB_PASSWORD=...
 # DB_NAME=policymatch
+# ORIGIN=https://your-subdomain.groqlabs.com  # Required for production deployment
 ```
 
 ### 3. Start dependencies
