@@ -12,9 +12,9 @@ import (
 	"policy-match/internal/service"
 	"policy-match/internal/utils"
 
-	"github.com/rs/zerolog/log"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 type Server struct {

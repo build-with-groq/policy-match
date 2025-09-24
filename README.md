@@ -110,6 +110,7 @@ cp frontend/.env.example frontend/.env.local
 GROQ_API_KEY=your_groq_api_key
 LLM_MODEL=meta-llama/llama-4-maverick-17b-128e-instruct
 TIKA_URL=http://localhost:9998
+ORIGIN=https://your-subdomain.groqlabs.com  # Required for production
 ```
 
 * `frontend/.env.local`:

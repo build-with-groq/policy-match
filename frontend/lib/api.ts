@@ -82,43 +82,114 @@ export interface DocumentsResponse {
   message: string
 }
 
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public isRateLimit: boolean = false
+  ) {
+    super(message)
+    this.name = 'ApiError'
+  }
+}
+
 export class ApiClient {
+  private static getApiKey(): string | null {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('groq_api_key')
+    }
+    return null
+  }
+
   private static async request<T>(url: string, options: RequestInit = {}): Promise<T> {
     try {
+      const apiKey = this.getApiKey()
+      const headers: HeadersInit = {
+        "Content-Type": "application/json",
+        ...options.headers,
+      }
+      if (apiKey) {
+        (headers as Record<string, string>)["X-API-Key"] = apiKey
+      }
+
       const response = await fetch(url, {
-        headers: {
-          "Content-Type": "application/json",
-          ...options.headers,
-        },
         ...options,
+        headers,
       })
 
+      if (response.status === 429) {
+        const errorText = await response.text()
+        throw new ApiError(
+          errorText || "Rate limit exceeded. Please add your Groq API key to continue.",
+          429,
+          true
+        )
+      }
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        const errorText = await response.text()
+        throw new ApiError(
+          errorText || `HTTP error! status: ${response.status}`,
+          response.status
+        )
       }
 
       return await response.json()
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error
+      }
       console.error("API request failed:", error)
-      throw error
+      throw new ApiError(
+        error instanceof Error ? error.message : "Unknown error occurred",
+        500
+      )
     }
   }
 
   private static async uploadRequest<T>(url: string, formData: FormData): Promise<T> {
     try {
+      // Add API key to headers if available
+      const apiKey = this.getApiKey()
+      const headers: HeadersInit = {}
+      
+      if (apiKey) {
+        headers["X-API-Key"] = apiKey
+      }
+
       const response = await fetch(url, {
         method: "POST",
         body: formData,
+        headers,
       })
 
+      if (response.status === 429) {
+        const errorText = await response.text()
+        throw new ApiError(
+          errorText || "Rate limit exceeded. Please add your Groq API key to continue.",
+          429,
+          true
+        )
+      }
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        const errorText = await response.text()
+        throw new ApiError(
+          errorText || `HTTP error! status: ${response.status}`,
+          response.status
+        )
       }
 
       return await response.json()
     } catch (error) {
+      if (error instanceof ApiError) {
+        throw error
+      }
       console.error("Upload request failed:", error)
-      throw error
+      throw new ApiError(
+        error instanceof Error ? error.message : "Unknown error occurred",
+        500
+      )
     }
   }
 

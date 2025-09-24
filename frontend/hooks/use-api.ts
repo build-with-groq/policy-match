@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { ApiClient, type Policy, type Document } from "@/lib/api"
+import { ApiClient, ApiError, type Policy, type Document } from "@/lib/api"
 import { UI_CONFIG } from "@/lib/constants"
 
 export function useHealthCheck() {
@@ -141,7 +141,7 @@ export function useDocuments(
   return { documents, loading, error, pagination, refetch }
 }
 
-export function useUpload() {
+export function useUpload(onRateLimitError?: (message: string) => void) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -152,6 +152,13 @@ export function useUpload() {
       const response = await ApiClient.uploadDocument(file, policyId)
       return response
     } catch (err) {
+      if (err instanceof ApiError && err.isRateLimit) {
+        // Handle rate limit error specially
+        onRateLimitError?.(err.message)
+        const errorMessage = "Rate limit reached. Please add your API key to continue."
+        setError(errorMessage)
+        throw err
+      }
       const errorMessage = err instanceof Error ? err.message : "Upload failed"
       setError(errorMessage)
       throw new Error(errorMessage)
@@ -167,6 +174,12 @@ export function useUpload() {
       const response = await ApiClient.uploadPolicy(file, title, category)
       return response
     } catch (err) {
+      if (err instanceof ApiError && err.isRateLimit) {
+        onRateLimitError?.(err.message)
+        const errorMessage = "Rate limit reached. Please add your API key to continue."
+        setError(errorMessage)
+        throw err
+      }
       const errorMessage = err instanceof Error ? err.message : "Upload failed"
       setError(errorMessage)
       throw new Error(errorMessage)

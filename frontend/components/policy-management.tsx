@@ -17,11 +17,12 @@ import { cn } from "@/lib/utils"
 
 interface PolicyManagementProps {
   className?: string
+  onRateLimitError?: (message: string) => void
 }
 
-export function PolicyManagement({ className }: PolicyManagementProps) {
+export function PolicyManagement({ className, onRateLimitError }: PolicyManagementProps) {
   const { policies, loading, error, refetch } = usePolicies()
-  const { uploadPolicy, uploading } = useUpload()
+  const { uploadPolicy, uploading } = useUpload(onRateLimitError)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [newPolicyData, setNewPolicyData] = useState({
     title: "",

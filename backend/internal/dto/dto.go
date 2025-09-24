@@ -13,6 +13,6 @@ type UploadDocumentRequestDTO struct {
 	PolicyID string                `form:"policy_id" binding:"required"`
 }
 
-type UploadDocumentResponseDTO struct {
-	// TBD
-}
+const (
+	UserAPIKeyContext string = "user_api_key"
+)
