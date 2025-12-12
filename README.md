@@ -155,8 +155,7 @@ This installs backend & frontend dependencies, starts Docker Compose services, a
 
 ### For Developers
 - **Create your free GroqCloud account:** Access official API docs, the playground for experimentation, and more resources via [Groq Console](https://console.groq.com)
-- **Build and customize:** Fork this repo and start customizing to build out your own Chrome extension with AI capabilities
-- **Explore Chrome Extension APIs:** Learn more about [Chrome Extension development](https://developer.chrome.com/docs/extensions/) to add advanced features
+- **Build and customize:** Fork this repo and start customizing to build out your own
 - **Get support:** Connect with other developers building on Groq, chat with our team, and submit feature requests on our [Groq Developer Forum](https://community.groq.com)
 
 ### For Founders and Business Leaders
